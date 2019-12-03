@@ -96,8 +96,10 @@ defmodule ProblemSolver do
   end
 end
 
+IO.puts("Problem 1 solution: ")
 ProblemSolver.solve1()
 |> IO.inspect
 
+IO.puts("Problem 2 solution: ")
 ProblemSolver.solve2()
 |> IO.inspect
