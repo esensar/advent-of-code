@@ -3,8 +3,8 @@
 YEAR=$(date +"%Y")
 DAY=$(date +"%d")
 
-if [ -z "$SESSION" ]; then
-	echo "Session not found. Make sure to set SESSION env variable to session from adventofcode.com"
+if [ -z "$AOC_SESSION" ]; then
+	echo "Session not found. Make sure to set AOC_SESSION env variable to session from adventofcode.com"
 	exit 1
 fi
 

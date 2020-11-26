@@ -4,7 +4,7 @@ This repository includes my solutions for [Advent of Code](https://adventofcode.
 
 ## Scripts
 
-All scripts are expected to be run from repository root.
+All scripts are expected to be run from repository root. All scripts also expect environment variable AOC_SESSION to be set, which allows it to load user specific data. This can be easily set up using [direnv](https://direnv.net/)
 
 To load input file for current day, run:
 ```sh
