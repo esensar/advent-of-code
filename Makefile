@@ -1,5 +1,10 @@
-YEAR=$(shell sh -c 'date +"%Y"')
-DAY=$(shell sh -c 'date +"%d"')
+YEAR := $(shell sh -c 'date +"%Y"')
+DAY := $(shell sh -c 'date +"%d"')
+
+ifeq ($(SESSION), )
+ensure_year_dir: fail_due_to_missing_session
+endif
+
 
 define load_input
 	@echo "Loading input for $1/$2"
@@ -8,7 +13,7 @@ endef
 
 define make_day_dir
 	@echo "Creating directory for $1/$2"
-	@mkdir $1/$2
+	@mkdir -p $1/$2
 endef
 
 .PHONY: load_latest
@@ -18,4 +23,8 @@ load_latest: ensure_year_dir
 
 .PHONY: ensure_year_dir
 ensure_year_dir:
-	@mkdir $(YEAR)
+	@mkdir -p $(YEAR)
+
+.PHONY: fail_due_to_missing_session
+fail_due_to_missing_session:
+	$(error Session not found. Make sure to set SESSION env variable to session from adventofcode.com)
