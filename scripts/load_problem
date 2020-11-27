@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "$AOC_SESSION" ]; then
+	echo "Session not found. Make sure to set AOC_SESSION env variable to session from adventofcode.com"
+	exit 1
+fi
+
+echo "Loading AOC problem for $1/$2"
+
+mkdir -p $1/$2
+echo "Original link: https://adventofcode.com/$1/day/$2\n" > $1/$2/readme.txt
+
+curl -b "session=$AOC_SESSION" https://adventofcode.com/$1/day/$2 | sed -n "/<article class=\"day-desc\">/,/<\/article>/p" | sed -n '/^$/!{s/<p[^>]*>/|/g;p;}' | tr '|' '\n' | sed -n '/^$/!{s/<[^>]*>//g;p;}' >> $1/$2/readme.txt
+
+scripts/load_input $1 $2

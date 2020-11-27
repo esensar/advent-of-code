@@ -1,8 +1,5 @@
 #!/bin/sh
 
-YEAR=$(date +"%Y")
-DAY=$(date +"%d")
-
 if [ -z "$AOC_SESSION" ]; then
 	echo "Session not found. Make sure to set AOC_SESSION env variable to session from adventofcode.com"
 	exit 1
@@ -11,4 +8,4 @@ fi
 echo "Loading input for $1/$2"
 
 mkdir -p $1/$2
-curl -b "session=$SESSION" https://adventofcode.com/$1/day/$2/input > $1/$2/input.txt
+curl -b "session=$AOC_SESSION" https://adventofcode.com/$1/day/$2/input > $1/$2/input.txt
