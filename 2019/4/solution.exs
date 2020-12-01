@@ -73,7 +73,7 @@ defmodule ProblemSolver do
 
   @spec load_input_range(String.t()) :: Range.t()
   defp load_input_range(filename) do
-    File.read!(filename)
+    File.read!(Path.expand(filename, __DIR__))
     |> String.trim
     |> String.split("-")
     |> Enum.map(&String.to_integer/1)

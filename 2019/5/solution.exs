@@ -133,7 +133,7 @@ end
 
 defmodule IntcodeLoader do
   def prepare_from_file(filename) do
-    File.stream!(filename)
+    File.stream!(Path.expand(filename, __DIR__))
     |> Enum.flat_map(&String.split(&1, ","))
     |> Enum.map(&String.trim/1)
     |> Enum.map(&String.to_integer/1)

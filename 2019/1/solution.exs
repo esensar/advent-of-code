@@ -22,7 +22,7 @@ defmodule ProblemSolver do
   end
 
   defp load_modules(filename) do
-    File.stream!(filename)
+    File.stream!(Path.expand(filename, __DIR__))
     |> Enum.map(&String.trim/1)
     |> Enum.map(&String.to_integer/1)
   end

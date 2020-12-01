@@ -59,13 +59,12 @@ defmodule ProblemSolver do
   def solve2() do
     load_input("input.txt")
     |> OrbitMap.orbits_between_satellites("YOU", "SAN")
-    |> IO.inspect
     |> Enum.count
   end
 
   @spec load_input(String.t()) :: %{}
   defp load_input(filename) do
-    File.stream!(filename)
+    File.stream!(Path.expand(filename, __DIR__))
     |> Enum.map(&String.trim/1)
     |> Enum.map(&String.split(&1, ")"))
     |> Enum.map(&Enum.reverse/1)

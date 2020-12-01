@@ -37,7 +37,7 @@ defmodule ProblemSolver do
   end
 
   defp load_entries(filename) do
-    File.stream!("2020/1/#{filename}")
+    File.stream!(Path.expand(filename, __DIR__))
     |> Enum.map(&String.trim/1)
     |> Enum.map(&String.to_integer/1)
   end

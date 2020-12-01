@@ -91,7 +91,7 @@ defmodule ProblemSolver do
 
   @spec load_instruction_sets(String.t()) :: [[String.t()]]
   defp load_instruction_sets(filename) do
-    File.stream!(filename)
+    File.stream!(Path.expand(filename, __DIR__))
     |> Enum.map(&generate_instruction_set/1)
   end
 end
