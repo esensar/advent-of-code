@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ -z "$AOC_SESSION" ]; then
+	echo "Session not found. Make sure to set AOC_SESSION env variable to session from adventofcode.com"
+	exit 1
+fi
+
+echo "Checking for existing problem for $1/$2"
+PROBLEM_FILE=$1/$2/readme.txt
+SOLUTION=$3
+
+if [ ! -f "$PROBLEM_FILE" ]; then
+	echo "Problem not found. Make sure to load problem first! (Missing $PROBLEM_FILE) file!"
+	exit 1
+fi
+
+PART=1
+
+if [ $(grep -c -e '--- Part Two ---' $PROBLEM_FILE) -ne 0 ]; then
+	PART=2
+fi
+
+echo "Submitting result ($3) for part $PART"
+
+curl -b "session=$AOC_SESSION" -X POST -F "answer=$SOLUTION" -F "level=$PART" https://adventofcode.com/$1/day/$2/answer

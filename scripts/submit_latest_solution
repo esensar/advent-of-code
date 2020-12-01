@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	echo "Missing solution!"
+	exit 1
+fi
+
+scripts/submit_solution $(date +"%Y") $(date +"%-d") $1
