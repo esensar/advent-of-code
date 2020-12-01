@@ -9,7 +9,7 @@ defmodule Entries do
   def find_sumtriple(entries, sum) do
     entries
     |> Enum.map(fn x -> {x, find_sumpair(entries, sum - x)} end)
-    |> Enum.filter(fn {x, sumpair} -> Enum.count(sumpair) > 0 end)
+    |> Enum.filter(fn {_, sumpair} -> Enum.count(sumpair) > 0 end)
     |> Enum.map(fn {x, sumpair} -> sumpair ++ [x] end)
     |> Enum.at(0)
   end
