@@ -25,3 +25,15 @@ To load only input for a specific day, run:
 ```sh
 scripts/load_input [year] [day]
 ```
+
+To submit solution for current day, run:
+```sh
+scripts/submit_latest_solution [solution]
+```
+
+To submit solution for a specific day, run:
+```sh
+scripts/submit_solution [year] [day] [solution]
+```
+
+After submitting solution, to load second part, use same scripts as for loading the first part. Solution is submitted the same way as well.
