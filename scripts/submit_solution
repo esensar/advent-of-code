@@ -22,4 +22,4 @@ fi
 
 echo "Submitting result ($3) for part $PART"
 
-curl -i -H "Referer: https://adventofcode.com/$1/day/$2" -H "Accept: text/html" -b "session=$AOC_SESSION" -X POST -F "answer=$SOLUTION" -F "level=$PART" https://adventofcode.com/$1/day/$2/answer
+curl -i -b "session=$AOC_SESSION" -X POST -d "answer=$SOLUTION&level=$PART" https://adventofcode.com/$1/day/$2/answer
