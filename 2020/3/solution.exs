@@ -28,7 +28,7 @@ defmodule TobboganMap do
       |> String.graphemes
       |> Enum.count(),
       height: Enum.count(lines),
-      lines: lines |> Enum.map(&String.graphemes/1)
+      lines: Enum.map(lines, &String.graphemes/1)
     }
   end
 end
@@ -43,7 +43,7 @@ defmodule ProblemSolver do
     map = load_map("input.txt")
     [{1, 1}, {3, 1}, {5, 1}, {7, 1}, {1, 2}]
     |> Enum.map(fn {right, down} -> TobboganMap.count_trees_on_angle(map, right, down) end)
-    |> Enum.reduce(fn x, acc -> x * acc end)
+    |> Enum.reduce(&Kernel.*/2)
   end
 
   defp load_map(filename) do

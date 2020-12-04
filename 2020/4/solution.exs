@@ -11,15 +11,17 @@ defmodule Passport do
 
   def valid_format?(passport) do
     passport_keys = passport
-    |> Enum.map(fn {key, _} -> key end)
+    |> Enum.map(&Kernel.elem(&1, 0))
 
     @mandatory_fields
-    |> Enum.reduce(true, fn x, acc -> acc and (x in passport_keys) end)
+    |> Enum.map(&Kernel.in(&1, passport_keys))
+    |> Enum.reduce(&Kernel.and/2)
   end
 
   def valid_data?(passport) do
     valid_fields = passport
-                   |> Enum.reduce(true, fn x, acc -> acc and valid_field?(x) end)
+                   |> Enum.map(&valid_field?/1)
+                   |> Enum.reduce(&Kernel.and/2)
 
     valid_fields and valid_format?(passport)
   end
@@ -66,7 +68,7 @@ defmodule Passport do
   defp parse_passport_entry_field(field) do
     split = field
     |> String.split(":")
-    {Enum.at(split, 0) |> String.to_atom, Enum.at(split, 1)}
+    {String.to_atom(Enum.at(split, 0)), Enum.at(split, 1)}
   end
 end
 
