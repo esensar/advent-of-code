@@ -1,26 +1,34 @@
 defmodule JoltageAdapters do
 
   def find_ways_to_connect_adapter(adapters) do
+    :ets.new(:cache, [:named_table])
     adapters
     |> Enum.sort
     |> count_distinct_valid_connections
   end
 
   defp count_distinct_valid_connections(adapters, current_val \\ 0) do
-    if Enum.count(adapters) == 0 or Enum.at(adapters, 0) - current_val > 3 do
-      1
+    cached = :ets.lookup(:cache, current_val)
+    if Enum.count(cached) > 0 do
+      Enum.at(cached, 0)
+      |> elem(1)
     else
-      # Only possible jumps may be found in first 3 elements
-      {count, index} = Enum.take(adapters, 3)
-      |> Enum.with_index
-      |> Enum.reduce_while({0, 0}, fn {x, index}, {acc, last_index} ->
-        if x - current_val <= 3 do
-          {:cont, {acc + 1, index}}
-        else
-          {:halt, {acc, last_index}}
-        end
-      end)
-      count * count_distinct_valid_connections(Enum.slice(adapters, (index + 1)..Enum.count(adapters)), Enum.at(adapters, index))
+      if Enum.count(adapters) == 0 or Enum.at(adapters, 0) - current_val > 3 do
+        1
+      else
+        # Only possible jumps may be found in first 3 elements
+        result = Enum.take(adapters, 3)
+        |> Enum.with_index
+        |> Enum.reduce_while(0, fn {x, index}, acc ->
+          if x - current_val <= 3 do
+            {:cont, acc + count_distinct_valid_connections(Enum.slice(adapters, (index + 1)..Enum.count(adapters)), Enum.at(adapters, index))}
+          else
+            {:halt, acc}
+          end
+        end)
+        :ets.insert(:cache, {current_val, result})
+        result
+      end
     end
   end
 
