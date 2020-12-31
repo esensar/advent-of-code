@@ -6,7 +6,9 @@ if [ -z "$AOC_SESSION" ]; then
 fi
 
 echo "Checking for existing problem for $1/$2"
-PROBLEM_FILE=$1/$2/readme.txt
+YEAR=$(printf "%04d" $1)
+DAY=$(printf "%02d" $2)
+PROBLEM_FILE=$YEAR/$DAY/readme.txt
 SOLUTION=$3
 
 if [ ! -f "$PROBLEM_FILE" ]; then
