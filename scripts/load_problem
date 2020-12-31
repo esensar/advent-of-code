@@ -10,8 +10,8 @@ echo "Loading AOC problem for $1/$2"
 YEAR=$(printf "%04d" $1)
 DAY=$(printf "%02d" $2)
 mkdir -p $YEAR/$DAY
-echo "Original link: https://adventofcode.com/$YEAR/day/$DAY\n" > $YEAR/$DAY/readme.txt
+echo "Original link: https://adventofcode.com/$1/day/$2\n" > $YEAR/$DAY/readme.txt
 
-curl -b "session=$AOC_SESSION" https://adventofcode.com/$YEAR/day/$DAY | sed -n "/<article class=\"day-desc\">/,/<\/article>/p" | sed -n '/^$/!{s/<p[^>]*>/|/g;p;}' | tr '|' '\n' | sed -n '/^$/!{s/<[^>]*>//g;p;}' >> $YEAR/$DAY/readme.txt
+curl -b "session=$AOC_SESSION" https://adventofcode.com/$1/day/$2 | sed -n "/<article class=\"day-desc\">/,/<\/article>/p" | sed -n '/^$/!{s/<p[^>]*>/|/g;p;}' | tr '|' '\n' | sed -n '/^$/!{s/<[^>]*>//g;p;}' >> $YEAR/$DAY/readme.txt
 
 scripts/load_input $1 $2
