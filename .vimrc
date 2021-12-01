@@ -14,7 +14,7 @@ endfunction
 
 function! SubmitSolution(solution)
 	let l:parts = split(expand("%"), "/")
-	execute "!scripts/submit_solution " . l:parts[-3] . " " . l:parts[-2]
+	execute "!scripts/submit_solution " . l:parts[-3] . " " . trim(l:parts[-2], "0", 1) . " " . a:solution
 endfunction
 
 command! -nargs=0 AOCLoadAndEditLatest :call LoadAndEditLatestProblem()
