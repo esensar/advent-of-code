@@ -9,7 +9,7 @@ function! LoadAndEditProblem(year, day)
 endfunction
 
 function! LoadAndEditLatestProblem()
-	call LoadAndEditProblem(strftime("%Y"), strftime("%d"))
+	call LoadAndEditProblem(strftime("%Y"), strftime("%-d"))
 endfunction
 
 function! SubmitSolution(solution)
