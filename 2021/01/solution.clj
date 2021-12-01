@@ -15,8 +15,8 @@
 
 (defn to-triples [coll] (partition 3 1 coll))
 
-(defn part-1 []
-  (->> (get-input)
+(defn part-1 [input]
+  (->> input
        to-pairs
        (map pair-to-measurement)
        (filter #(= :increased %))
@@ -26,10 +26,7 @@
   (->> (get-input)
        to-triples
        (map #(reduce + %))
-       to-pairs
-       (map pair-to-measurement)
-       (filter #(= :increased %))
-       count))
+       part-1))
 
-(println "Problem 1 solution: " (part-1))
+(println "Problem 1 solution: " (part-1 (get-input)))
 (println "Problem 2 solution: " (part-2))
