@@ -1,14 +1,11 @@
 (require '(clojure [string :as str]))
 
-(defn get-input []
-  (map #(Integer/parseInt %) (str/split (slurp "input.txt") #"\n")))
+(def current-dir (.getParent (java.io.File. *file*)))
 
-(defn to-pairs
-  ([coll] (to-pairs coll []))
-  ([[head & tail] pairs]
-   (cond
-     (nil? (first tail)) pairs
-     :else (recur tail (conj pairs [head (first tail)])))))
+(defn get-input []
+  (map #(Integer/parseInt %) (str/split (slurp (java.io.File. current-dir "input.txt")) #"\n")))
+
+(defn to-pairs [coll] (partition 2 1 coll))
 
 (defn pair-to-measurement [[l r]]
   (cond
@@ -16,13 +13,7 @@
     (< l r) :increased
     (= l r) :eq))
 
-(defn to-triples
-  ([coll] (to-triples coll []))
-  ([[head & tail] triples]
-   (cond
-     (nil? (first tail)) triples
-     (nil? (first (rest tail))) triples
-     :else (recur tail (conj triples [head (first tail) (first (rest tail))])))))
+(defn to-triples [coll] (partition 3 1 coll))
 
 (defn part-1 []
   (->> (get-input)
