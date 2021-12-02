@@ -35,16 +35,16 @@ To do this, count the number of times a depth measurement increases from the pre
 In this example, there are 7 measurements that are larger than the previous measurement.
 How many measurements are larger than the previous measurement?
 
-Your puzzle answer was 1162.--- Part Two ---
+--- Part Two ---
 Considering every single measurement isn't as useful as you expected: there's just too much noise in the data.
 Instead, consider sums of a three-measurement sliding window.  Again considering the above example:
-199  A      
-200  A B    
-208  A B C  
+199  A
+200  A B
+208  A B C
 210    B C D
 200  E   C D
 207  E F   D
-240  E F G  
+240  E F G
 269    F G H
 260      G H
 263        H
@@ -63,4 +63,3 @@ H: 792 (increased)
 
 In this example, there are 5 sums that are larger than the previous sum.
 Consider sums of a three-measurement sliding window. How many sums are larger than the previous sum?
-
