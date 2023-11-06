@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -z "$AOC_SESSION" ]; then
+	echo "Session not found. Make sure to set AOC_SESSION env variable to session from adventofcode.com"
+	exit 1
+fi
+
+echo "This will only load missing inputs. Run 'rm **/input.txt' to clean up before loading all inputs."
+
+for YEAR in $(ls -d 20*); do
+	for DAY in $(ls $YEAR); do
+		if [ ! -f "$YEAR/$DAY/input.txt" ]; then
+			scripts/load_input $YEAR $(echo $DAY | bc)
+		fi
+	done
+done

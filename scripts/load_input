@@ -10,4 +10,5 @@ echo "Loading input for $1/$2"
 YEAR=$(printf "%04d" $1)
 DAY=$(printf "%02d" $2)
 mkdir -p $YEAR/$DAY
-curl -b "session=$AOC_SESSION" https://adventofcode.com/$1/day/$2/input > $YEAR/$DAY/input.txt
+DAY_URL=$(printf "%d" $2)
+curl -b "session=$AOC_SESSION" https://adventofcode.com/$YEAR/day/$DAY_URL/input > $YEAR/$DAY/input.txt
