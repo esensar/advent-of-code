@@ -3,3 +3,8 @@
 2023/*/target
 2024/*/target
 **/input.txt
+
+
+# Added by cargo
+
+/target
