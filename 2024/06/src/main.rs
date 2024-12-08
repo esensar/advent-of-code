@@ -1,4 +1,7 @@
 use core::panic;
+use std::sync::Arc;
+use std::sync::Mutex;
+use std::thread;
 use std::{
     fs::File,
     io::{BufRead, BufReader},
@@ -29,16 +32,6 @@ impl Direction {
             Direction::Down => (pos.0, pos.1 + 1),
             Direction::Left => (pos.0 - 1, pos.1),
         }
-    }
-
-    fn is_inverse(&self, other: &Self) -> bool {
-        matches!(
-            (self, other),
-            (Direction::Up, Direction::Down)
-                | (Direction::Down, Direction::Up)
-                | (Direction::Right, Direction::Left)
-                | (Direction::Left, Direction::Right)
-        )
     }
 }
 
@@ -88,50 +81,56 @@ impl GuardMap {
     }
 
     fn simulate_guard(&mut self) -> bool {
-        let position = self
-            .map
-            .iter()
-            .position(|s| matches!(s.last().unwrap(), MapSlot::Guard(_)));
-        if position.is_none() {
+        loop {
+            let position = self
+                .map
+                .iter()
+                .position(|s| matches!(s.last().unwrap(), MapSlot::Guard(_)));
+            if position.is_none() {
+                return true;
+            }
+            let position = position.unwrap();
+            let guard = &self.map[position].last().unwrap().clone();
+
+            if let MapSlot::Guard(direction) = guard {
+                self.map[position].push(MapSlot::Visited(direction.clone()));
+                let y: isize = (position / self.width).try_into().unwrap();
+                let x: isize = (position % self.width).try_into().unwrap();
+                let (x, y) = direction.move_position((x, y));
+                if (0..self.height).contains(&(y as usize))
+                    && (0..self.width).contains(&(x as usize))
+                {
+                    let new_position = x as usize + (y as usize) * self.width;
+                    if self.map[new_position]
+                        .iter()
+                        .any(|s| matches!(s, MapSlot::Visited(prev_dir) if prev_dir == direction))
+                    {
+                        return false;
+                    }
+                    match &self.map[new_position].last().unwrap() {
+                        MapSlot::Obstruction => {
+                            self.map[position].push(MapSlot::Guard(direction.turn_right()))
+                        }
+                        _ => self.map[new_position].push(guard.clone()),
+                    }
+                    continue;
+                }
+            } else {
+                panic!("");
+            }
             return true;
         }
-        let position = position.unwrap();
-        let guard = &self.map[position].last().unwrap().clone();
-        if let MapSlot::Guard(direction) = guard {
-            self.map[position].push(MapSlot::Visited(direction.clone()));
-            let y: isize = (position / self.width).try_into().unwrap();
-            let x: isize = (position % self.width).try_into().unwrap();
-            let (x, y) = direction.move_position((x, y));
-            if (0..self.height).contains(&(y as usize)) && (0..self.width).contains(&(x as usize)) {
-                let new_position = x as usize + (y as usize) * self.width;
-                if self.map[new_position]
-                    .iter()
-                    .any(|s| matches!(s, MapSlot::Visited(prev_dir) if prev_dir == direction))
-                {
-                    return false;
-                }
-                match &self.map[new_position].last().unwrap() {
-                    MapSlot::Obstruction => {
-                        self.map[position].push(MapSlot::Guard(direction.turn_right()))
-                    }
-                    _ => self.map[new_position].push(guard.clone()),
-                }
-                return self.simulate_guard();
-            }
-        } else {
-            panic!("");
-        }
-        true
     }
 
     fn find_potential_loop_placement_positions(
         &self,
         potential_positions: impl Iterator<Item = (usize, usize)>,
     ) -> Vec<(usize, usize)> {
-        let mut positions = Vec::new();
+        let positions = Arc::new(Mutex::new(Vec::new()));
+        let mut threads = Vec::new();
         for (i, j) in potential_positions {
             if !matches!(
-                self.map[i * self.width + j].last().unwrap(),
+                self.map[i * self.width + j].first().unwrap(),
                 MapSlot::Guard(_)
             ) {
                 let mut new_map = self.map.clone();
@@ -141,12 +140,17 @@ impl GuardMap {
                     width: self.width,
                     map: new_map,
                 };
-                if !new_self.simulate_guard() {
-                    positions.push((i, j));
-                }
+                let t_positions = positions.clone();
+                threads.push(thread::spawn(move || {
+                    if !new_self.simulate_guard() {
+                        t_positions.lock().unwrap().push((i, j));
+                    }
+                }))
             }
         }
-        positions
+        threads.into_iter().for_each(|t| t.join().unwrap());
+        let x = positions.lock().unwrap().clone();
+        x
     }
 }
 
