@@ -14,8 +14,8 @@ fn read_file(gpa: std.mem.Allocator) !struct { std.ArrayList(u32), std.ArrayList
 }
 
 fn parse_lines(gpa: std.mem.Allocator, lines: *std.mem.TokenIterator(u8, .any)) !struct { std.ArrayList(u32), std.ArrayList(u32) } {
-    var left = try std.ArrayList(u32).initCapacity(gpa, 10);
-    var right = try std.ArrayList(u32).initCapacity(gpa, 10);
+    var left: std.ArrayList(u32) = .empty;
+    var right: std.ArrayList(u32) = .empty;
     while (lines.next()) |line| {
         var objs = std.mem.tokenizeAny(u8, line, " \t");
         try left.append(gpa, try std.fmt.parseInt(u32, objs.next().?, 10));
@@ -73,8 +73,7 @@ pub fn main() !void {
 }
 
 test "test_part_1_example" {
-    var debug = std.heap.DebugAllocator(.{}){};
-    const alloc = debug.allocator();
+    const alloc = std.testing.allocator;
     var lines = std.mem.tokenizeAny(u8, "3\t4\n4\t3\n2\t5\n1\t3\n3\t9\n3\t3\n", "\n");
     var left, var right = try parse_lines(alloc, &lines);
     defer left.deinit(alloc);
@@ -84,8 +83,7 @@ test "test_part_1_example" {
 }
 
 test "test_part_2_example" {
-    var debug = std.heap.DebugAllocator(.{}){};
-    const alloc = debug.allocator();
+    const alloc = std.testing.allocator;
     var lines = std.mem.tokenizeAny(u8, "3\t4\n4\t3\n2\t5\n1\t3\n3\t9\n3\t3\n", "\n");
     var left, var right = try parse_lines(alloc, &lines);
     defer left.deinit(alloc);
