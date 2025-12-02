@@ -39,10 +39,7 @@ fn read_input() []rotation = {
 	return rotations;
 };
 
-fn part1() size = {
-	let rotations = read_input();
-	defer free(rotations);
-
+fn count_zeroes_between_rotations(rotations: []rotation) size = {
 	let zeroes: size = 0;
 	let current: i64 = 50;
 
@@ -63,10 +60,7 @@ fn part1() size = {
 	return zeroes;
 };
 
-fn part2() size = {
-	let rotations = read_input();
-	defer free(rotations);
-
+fn count_zeroes_between_rotation_steps(rotations: []rotation) size = {
 	let zeroes: size = 0;
 	let current: i64 = 50;
 
@@ -96,4 +90,49 @@ fn part2() size = {
 	};
 
 	return zeroes;
+};
+
+fn test_input() []rotation = {
+	let rotations: []rotation = alloc([rotation { dir = direction::LEFT, val = 0 }...], 10)!;
+
+	rotations[0].val = 68;
+	rotations[1].val = 30;
+	rotations[2].dir = direction::RIGHT;
+	rotations[2].val = 48;
+	rotations[3].val = 5;
+	rotations[4].dir = direction::RIGHT;
+	rotations[4].val = 60;
+	rotations[5].val = 55;
+	rotations[6].val = 1;
+	rotations[7].val = 99;
+	rotations[8].dir = direction::RIGHT;
+	rotations[8].val = 14;
+	rotations[9].val = 82;
+
+	return rotations;
+};
+
+@test fn count_zeroes_between_rotations() void = {
+	const rotations = test_input();
+	defer free(rotations);
+	assert(count_zeroes_between_rotations(rotations) == 3);
+};
+
+fn part1() size = {
+	let rotations = read_input();
+	defer free(rotations);
+	return count_zeroes_between_rotations(rotations);
+};
+
+@test fn count_zeroes_between_rotation_steps() void = {
+	const rotations = test_input();
+	defer free(rotations);
+	assert(count_zeroes_between_rotation_steps(rotations) == 6);
+};
+
+fn part2() size = {
+	let rotations = read_input();
+	defer free(rotations);
+
+	return count_zeroes_between_rotation_steps(rotations);
 };
